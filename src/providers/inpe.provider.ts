@@ -60,14 +60,9 @@ export class InpeProvider {
     if (!fileName) throw new Error('InpeProvider: failed to get file name.');
 
     return {
-      fileName: 'focos_abertos_20211221_170000.csv',
-      date: new Date('2021-12-21 17:00 GMT'),
+      fileName,
+      date: new Date(`${fileDate} GMT`),
     };
-
-    // return {
-    //   fileName,
-    //   date: new Date(`${fileDate} GMT`),
-    // };
   }
 
   /**
