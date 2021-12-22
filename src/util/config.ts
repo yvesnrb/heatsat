@@ -11,3 +11,8 @@ export const inpeConfig = {
 export const mapsConfig = {
   key: process.env.MAPS_API_KEY || '',
 };
+
+export const basicAuth = {
+  name: process.env.BASIC_NAME || '',
+  pass: process.env.BASIC_PASS || '',
+};
