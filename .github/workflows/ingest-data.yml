@@ -1,19 +1,14 @@
 name: ingest-data
 on:
   schedule:
-    - cron: '*/12 * * * *'
+    - cron: '*/10 * * * *'
 jobs:
   cron:
     runs-on: ubuntu-latest
     steps:
       - name: Call our API route
         run: |
-          curl --request GET \ 
-          --url https://heatsat.vercel.app/api/ingest-data \ 
-          --u ${{ secrets.BASIC_USER }}:${{ secrets.BASIC_PASS }} \ 
+          curl --request GET \
+          --url https://heatsat.vercel.app/api/ingest-data \
+          --u ${{ secrets.BASIC_USER }}:${{ secrets.BASIC_PASS }} \
           --fail
-
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
