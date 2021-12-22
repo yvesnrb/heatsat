@@ -10,5 +10,5 @@ jobs:
         run: |
           curl --request GET \
           --url https://heatsat.vercel.app/api/ingest-data \
-          --u ${{ secrets.BASIC_USER }}:${{ secrets.BASIC_PASS }} \
+          -u ${{ secrets.BASIC_USER }}:${{ secrets.BASIC_PASS }} \
           --fail
