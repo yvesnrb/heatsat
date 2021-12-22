@@ -38,32 +38,36 @@ export class IngestLatestDataService {
 
     const rawData = await this.inpeProvider.fetchData(fileName);
 
-    for (let heatReading of rawData) {
-      const location = await this.geodecoderProvider.decode({
-        lat: heatReading.lat,
-        lon: heatReading.lon,
-      });
+    await Promise.all(
+      rawData.map(async (r) => {
+        // Ignore readings outside of South America.
+        if (r.lat > 12 || r.lon > -20) return;
 
-      if (!location.region || !location.country) continue;
-
-      const zone = await this.findZoneQuery.execute({
-        region: location.region,
-        country: location.country,
-      });
-
-      if (zone)
-        dataPoints.push({
-          _id: new ObjectID(),
-          lat: heatReading.lat,
-          lon: heatReading.lon,
-          zoneID: zone._id,
-          satellite: heatReading.satellite,
-          timestamp: heatReading.timestamp,
+        const location = await this.geodecoderProvider.decode({
+          lat: r.lat,
+          lon: r.lon,
         });
-    }
+
+        if (!location?.region || !location?.country) return;
+
+        const zone = await this.findZoneQuery.execute({
+          region: location.region,
+          country: location.country,
+        });
+
+        if (zone)
+          dataPoints.push({
+            _id: new ObjectID(),
+            lat: r.lat,
+            lon: r.lon,
+            zoneID: zone._id,
+            satellite: r.satellite,
+            timestamp: r.timestamp,
+          });
+      })
+    );
 
     await this.createDataPoints.execute(dataPoints);
-
     await this.createIngestedDataCommand.execute({ timestamp: date });
   }
 }
