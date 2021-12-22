@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
+import rateLimit from 'axios-rate-limit';
 
 import { mapsConfig } from '@/util/config';
 
@@ -31,13 +32,16 @@ export interface IMapsResponse {
  * Decode coordinates using the Google Maps API
  */
 export class GeodecoderProvider {
-  private api: AxiosInstance = axios.create({
-    baseURL: 'https://maps.googleapis.com/maps/api/geocode/json',
-    params: {
-      key: mapsConfig.key,
-      language: 'en',
-    },
-  });
+  private api: AxiosInstance = rateLimit(
+    axios.create({
+      baseURL: 'https://maps.googleapis.com/maps/api/geocode/json',
+      params: {
+        key: mapsConfig.key,
+        language: 'en',
+      },
+    }),
+    { maxRequests: 200, perMilliseconds: 60000 }
+  );
 
   /**
    * Decode a coordinate pair into a country and a region.
