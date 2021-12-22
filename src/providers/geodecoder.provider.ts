@@ -2,6 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 import rateLimit from 'axios-rate-limit';
 
 import { mapsConfig } from '@/util/config';
+import { AppError } from '@/util/app-error';
 
 export interface IDecodeRequest {
   lat: number;
@@ -49,7 +50,7 @@ export class GeodecoderProvider {
    * @param request - An object containing the latitude and longitude.
    * @returns An object with country and region.
    *
-   * @throws {Error('GeodecoderProvider: failed to search for coordinates.')}
+   * @throws {AppError(500, 'GeodecoderProvider: failed to search for coordinates.')}
    * Thrown if axios has failed to search for the coordinates on Google's
    * endpoint.
    */
@@ -63,7 +64,8 @@ export class GeodecoderProvider {
         },
       })
       .catch((_e) => {
-        throw new Error(
+        throw new AppError(
+          500,
           'GeodecoderProvider: failed to search for coordinates.'
         );
       });

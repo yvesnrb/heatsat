@@ -5,6 +5,7 @@ import { parse } from 'node-html-parser';
 
 import { inpeConfig } from '@/util/config';
 import { IHeatReading, TSatellite } from '@/entities/heat-reading.entity';
+import { AppError } from '@/util/app-error';
 
 /**
  * Parsed heat reading as it comes from the INPE CSV file.
@@ -38,17 +39,20 @@ export class InpeProvider {
    *
    * @returns An object containing 'fileName' and 'date'.
    *
-   * @throws {Error('InpeProvider: failed to fetch directory page.')}
+   * @throws {AppError(500, 'InpeProvider: failed to fetch directory page.')}
    * Thrown if the request to fetch the directory page failed.
    *
-   * @throws {Error('InpeProvider: failed to get file name.')}
+   * @throws {AppError(500, 'InpeProvider: failed to get file name.')}
    * Thrown if the anchor href attribute containing the file name was not found.
    */
   public async fetchLatestDataInfo(): Promise<IFetchLatestDataInfoResponse> {
     const { data: directoryDocument } = await this.api
       .get<string>('/focos/10min')
       .catch((_e) => {
-        throw new Error('InpeProvider: failed to fetch directory page.');
+        throw new AppError(
+          500,
+          'InpeProvider: failed to fetch directory page.'
+        );
       });
 
     const documentRoot = parse(directoryDocument);
@@ -57,7 +61,8 @@ export class InpeProvider {
     const fileName = lastValidTableRow.querySelector('a')?.attributes.href;
     const fileDate = lastValidTableRow.querySelectorAll('td')[2].textContent;
 
-    if (!fileName) throw new Error('InpeProvider: failed to get file name.');
+    if (!fileName)
+      throw new AppError(500, 'InpeProvider: failed to get file name.');
 
     return {
       fileName,
@@ -71,7 +76,7 @@ export class InpeProvider {
    * @param fileName - The file name of the data to be fetched.
    * @returns An array of heat readings.
    *
-   * @throws {Error('InpeProvider: Failed to download CSV file.')}
+   * @throws {AppError(500, 'InpeProvider: Failed to download CSV file.')}
    * Thrown if axios has failed to download the relevant CSV file.
    */
   public async fetchData(fileName: string): Promise<IHeatReading[]> {
@@ -93,7 +98,7 @@ export class InpeProvider {
           .on('end', () => resolve(results));
       }
     ).catch((_e) => {
-      throw new Error('InpeProvider: Failed to download CSV file.');
+      throw new AppError(500, 'InpeProvider: Failed to download CSV file.');
     });
 
     const parsedData = rawData.map((d) => ({

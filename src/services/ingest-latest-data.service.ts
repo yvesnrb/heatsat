@@ -7,6 +7,7 @@ import { FindIngestedDataQuery } from '@/queries/find-ingested-data.query';
 import { CreateIngestedDataCommand } from '@/commands/create-ingested-data.command';
 import { FindZoneQuery } from '@/queries/find-zone.query';
 import { CreateDataPoints } from '@/commands/create-data-points.command';
+import { AppError } from '@/util/app-error';
 
 /**
  * Attempts to find the latest available INPE data, turn it into data points
@@ -24,6 +25,9 @@ export class IngestLatestDataService {
 
   /**
    * Executes the service.
+   *
+   * @throws {AppError(400, 'IngestLatestDataService: newest available data set has already been ingested.')}
+   * Thrown if the newest available data has already been ingested.
    */
   public async execute(): Promise<void> {
     const { fileName, date } = await this.inpeProvider.fetchLatestDataInfo();
@@ -32,7 +36,8 @@ export class IngestLatestDataService {
     const ingestedData = await this.findIngestedDataQuery.execute(date);
 
     if (ingestedData)
-      throw new Error(
+      throw new AppError(
+        400,
         'IngestLatestDataService: newest available data set has already been ingested.'
       );
 
