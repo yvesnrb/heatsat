@@ -1,9 +1,8 @@
-import { useCallback, useState, useMemo } from 'react';
-import { formatDistanceToNow } from 'date-fns';
-import { InfoWindow, Marker } from '@react-google-maps/api';
-import { FaSatellite } from 'react-icons/fa';
+import { useCallback, useState } from 'react';
+import { Marker } from '@react-google-maps/api';
 
 import { TSatellite } from '@/entities/heat-reading.entity';
+import { InfoWindow } from '@/components/info-window';
 
 export interface IProps {
   position: google.maps.LatLngLiteral;
@@ -24,30 +23,14 @@ export function DataPoint(props: IProps): JSX.Element {
     setShowInfo(false);
   }, []);
 
-  const timeFromNow = useMemo(
-    () => formatDistanceToNow(new Date(timestamp), { includeSeconds: true }),
-    [timestamp]
-  );
-
   return (
     <>
-      {showInfo && (
-        <InfoWindow position={position}>
-          <div className="bg-foreground text-background px-6 py-3 rounded">
-            <div className="flex items-center justify-center">
-              <FaSatellite size={25} className="mr-4 text-accent-3" />
-              <div>
-                <p className="text-xl font-medium mb-1">
-                  {position.lat}, {position.lng}
-                </p>
-                <p className="font-normal text-accent-3">
-                  Pinged by {satellite} {timeFromNow} ago.
-                </p>
-              </div>
-            </div>
-          </div>
-        </InfoWindow>
-      )}
+      <InfoWindow
+        show={showInfo}
+        position={position}
+        satellite={satellite}
+        timestamp={timestamp}
+      />
 
       <Marker
         onMouseOver={handleMouseOver}
