@@ -2,3 +2,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.gm-style-iw, .gm-style-iw-d, .gm-style-iw-a, .gm-style-iw-t {
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.gm-style-iw-d {
+  background: transparent !important;
+}
+
+.gm-style-iw-t::after {
+  display: none !important;
+}
+
+.gm-style-iw > button {
+  display: none !important;
+}
