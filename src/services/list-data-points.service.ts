@@ -9,9 +9,7 @@ export interface IExecuteRequest {
  * Lists data points by time frame.
  */
 export class ListDataPointsService {
-  constructor(
-    private listDataPointsQuery: ListDataPointsQuery,
-  ) {}
+  constructor(private listDataPointsQuery: ListDataPointsQuery) {}
 
   /**
    * Executes the service.
