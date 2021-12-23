@@ -8,8 +8,12 @@ export const inpeConfig = {
   pass: process.env.INPE_PASS || '',
 };
 
+export const geodecoderConfig = {
+  key: process.env.GEODECODER_API_KEY || '',
+};
+
 export const mapsConfig = {
-  key: process.env.MAPS_API_KEY || '',
+  key: process.env.NEXT_PUBLIC_MAPS_KEY || '',
 };
 
 export const basicAuth = {

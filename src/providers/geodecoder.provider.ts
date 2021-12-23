@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 import rateLimit from 'axios-rate-limit';
 
-import { mapsConfig } from '@/util/config';
+import { geodecoderConfig } from '@/util/config';
 import { AppError } from '@/util/app-error';
 
 export interface IDecodeRequest {
@@ -37,7 +37,7 @@ export class GeodecoderProvider {
     axios.create({
       baseURL: 'https://maps.googleapis.com/maps/api/geocode/json',
       params: {
-        key: mapsConfig.key,
+        key: geodecoderConfig.key,
         language: 'en',
       },
     }),
