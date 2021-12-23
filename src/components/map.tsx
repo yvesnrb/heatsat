@@ -3,6 +3,7 @@ import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 
 import { mapsConfig } from '@/util/config';
 import mapStyle from '@/util/map-style.json';
+import { FaSpinner } from 'react-icons/fa';
 
 export interface IProps {
   children?: ReactNode;
@@ -33,6 +34,9 @@ export function Map(props: IProps): JSX.Element {
       {children}
     </GoogleMap>
   ) : (
-    <p>Map loading...</p>
+    <div className="flex w-screen h-screen justify-center items-center bg-background fg-foreground">
+      <p className="font-bold mr-3">Loading...</p>
+      <FaSpinner className="animate-spin" />
+    </div>
   );
 }
