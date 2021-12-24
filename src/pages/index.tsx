@@ -26,8 +26,14 @@ export default function NextPage(props: IProps): JSX.Element {
       <Head>
         <title>HeatSat</title>
         <meta name="description" content="Track wildfires in South America." />
-        <meta name="og:description" content="Track wildfires in South America." />
-        <meta name="og:image" content="https://heatsat.vercel.app/og-image.png" />
+        <meta
+          name="og:description"
+          content="Track wildfires in South America."
+        />
+        <meta
+          name="og:image"
+          content="https://heatsat.vercel.app/og-image.png"
+        />
         <meta name="og:image:width" content="1200" />
         <meta name="og:image:height" content="627" />
         <link rel="icon" href="/favicon.ico" />
