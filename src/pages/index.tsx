@@ -5,21 +5,15 @@ import { Map } from '@/components/map';
 import { DataPoint } from '@/components/data-point';
 import { ListDataPointsQuery } from '@/queries/list-data-points.query';
 import { ListDataPointsService } from '@/services/list-data-points.service';
-import { TSatellite } from '@/entities/heat-reading.entity';
+import { IDataPoint } from '@/entities/data-point.entity';
+import { NavBar } from '@/components/nav-bar';
 
 export interface IProps {
-  dataPoints: Array<{
-    _id: string;
-    zoneID: string;
-    lat: number;
-    lon: number;
-    timestamp: string;
-    satellite: TSatellite;
-  }>;
+  initialDataPoints: IDataPoint[];
 }
 
 export default function NextPage(props: IProps): JSX.Element {
-  const { dataPoints } = props;
+  const { initialDataPoints } = props;
 
   return (
     <div className="text-foreground bg-background flex justify-center items-center h-screen">
@@ -40,12 +34,12 @@ export default function NextPage(props: IProps): JSX.Element {
       </Head>
 
       <Map>
-        {dataPoints.map((d) => (
+        {initialDataPoints.map((d) => (
           <DataPoint
-            key={d._id}
+            key={d._id.toHexString()}
             position={{ lat: d.lat, lng: d.lon }}
             satellite={d.satellite}
-            timestamp={d.timestamp}
+            timestamp={d.timestamp.toString()}
           />
         ))}
       </Map>
@@ -58,18 +52,11 @@ export async function getServerSideProps(): Promise<
 > {
   const listDataPointsQuery = new ListDataPointsQuery();
   const listDataPointsService = new ListDataPointsService(listDataPointsQuery);
-  const dataPoints = await listDataPointsService.execute({
-    timeframe: 1,
+  const initialDataPoints = await listDataPointsService.execute({
+    timeframe: 6,
   });
 
-  const serializedDataPoints = dataPoints.map((d) => ({
-    ...d,
-    _id: d._id.toHexString(),
-    zoneID: d.zoneID.toHexString(),
-    timestamp: d.timestamp.toString(),
-  }));
-
   return {
-    props: { dataPoints: serializedDataPoints },
+    props: { initialDataPoints },
   };
 }
