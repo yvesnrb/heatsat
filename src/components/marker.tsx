@@ -1,18 +1,10 @@
 import { useCallback, useState } from 'react';
-import { Marker } from '@react-google-maps/api';
+import { Marker as GoogleMarker } from '@react-google-maps/api';
 
-import { TSatellite } from '@/entities/heat-reading.entity';
 import { InfoWindow } from '@/components/info-window';
+import { IDataPoint } from '@/entities/data-point.entity';
 
-export interface IProps {
-  position: google.maps.LatLngLiteral;
-  satellite: TSatellite;
-  timestamp: string;
-}
-
-export function DataPoint(props: IProps): JSX.Element {
-  const { position, satellite, timestamp } = props;
-
+export function Marker(dataPoint: IDataPoint): JSX.Element {
   const [showInfo, setShowInfo] = useState(false);
 
   const handleMouseOver = useCallback((_e: google.maps.MapMouseEvent) => {
@@ -27,15 +19,21 @@ export function DataPoint(props: IProps): JSX.Element {
     <>
       <InfoWindow
         show={showInfo}
-        position={position}
-        satellite={satellite}
-        timestamp={timestamp}
+        position={{
+          lat: dataPoint.lat,
+          lng: dataPoint.lon,
+        }}
+        satellite={dataPoint.satellite}
+        timestamp={dataPoint.timestamp.toString()}
       />
 
-      <Marker
+      <GoogleMarker
         onMouseOver={handleMouseOver}
         onMouseOut={handleMouseOut}
-        position={position}
+        position={{
+          lat: dataPoint.lat,
+          lng: dataPoint.lon,
+        }}
         icon={{
           path: 'M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0',
           fillColor: '#C50000',

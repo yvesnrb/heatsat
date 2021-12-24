@@ -1,12 +1,12 @@
+import { useEffect } from 'react';
 import type { GetServerSidePropsResult } from 'next';
 import Head from 'next/head';
+import Link from 'next/link';
 
-import { Map } from '@/components/map';
-import { DataPoint } from '@/components/data-point';
 import { ListDataPointsQuery } from '@/queries/list-data-points.query';
 import { ListDataPointsService } from '@/services/list-data-points.service';
 import { IDataPoint } from '@/entities/data-point.entity';
-import { NavBar } from '@/components/nav-bar';
+import { useMapStore } from '@/hooks/use-map-store';
 
 export interface IProps {
   initialDataPoints: IDataPoint[];
@@ -15,10 +15,16 @@ export interface IProps {
 export default function NextPage(props: IProps): JSX.Element {
   const { initialDataPoints } = props;
 
+  const setMarkers = useMapStore((state) => state.setMarkers);
+
+  useEffect(() => {
+    setMarkers(initialDataPoints);
+  }, [initialDataPoints, setMarkers]);
+
   return (
-    <div className="text-foreground bg-background flex justify-center items-center h-screen">
+    <div className="font-normal text-lg">
       <Head>
-        <title>HeatSat</title>
+        <title>HEATSAT</title>
         <meta name="description" content="Track wildfires in South America." />
         <meta
           name="og:description"
@@ -33,16 +39,16 @@ export default function NextPage(props: IProps): JSX.Element {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Map>
-        {initialDataPoints.map((d) => (
-          <DataPoint
-            key={d._id.toHexString()}
-            position={{ lat: d.lat, lng: d.lon }}
-            satellite={d.satellite}
-            timestamp={d.timestamp.toString()}
-          />
-        ))}
-      </Map>
+      <p className="mb-3">
+        Hello! Welcome to HEATSAT. You are viewing real time satellite data from
+        the last 6 hours. More coming soon.
+      </p>
+
+      <Link href="/info">
+        <a className="border-dotted border-b-2 text-base border-accent-5">
+          Click here for more info.
+        </a>
+      </Link>
     </div>
   );
 }
