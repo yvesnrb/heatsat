@@ -5,29 +5,29 @@ import { FindIngestedDataQuery } from '@/queries/find-ingested-data.query';
 import { CreateIngestedDataCommand } from '@/commands/create-ingested-data.command';
 import { FindZoneQuery } from '@/queries/find-zone.query';
 import { CreateDataPoints } from '@/commands/create-data-points.command';
-import { authMiddleware } from '@/middleware/auth.middleware';
-import { errorHandlerHOF } from '@/util/error-handler-hof';
+import { withAuth } from '@/middleware/auth.middleware';
+import { withErrorHandling } from '@/middleware/error-handler.middleware';
 
-export default errorHandlerHOF(async (req, res) => {
-  authMiddleware(req, res);
+export default withErrorHandling(
+  withAuth(async (_req, res) => {
+    const inpeProvider = new InpeProvider();
+    const geodecoderProvider = new GeodecoderProvider();
+    const findIngestedDataQuery = new FindIngestedDataQuery();
+    const findZoneQuery = new FindZoneQuery();
+    const createIngestedDataCommand = new CreateIngestedDataCommand();
+    const createDataPoints = new CreateDataPoints();
 
-  const inpeProvider = new InpeProvider();
-  const geodecoderProvider = new GeodecoderProvider();
-  const findIngestedDataQuery = new FindIngestedDataQuery();
-  const findZoneQuery = new FindZoneQuery();
-  const createIngestedDataCommand = new CreateIngestedDataCommand();
-  const createDataPoints = new CreateDataPoints();
+    const ingestLatestData = new IngestLatestDataService(
+      inpeProvider,
+      geodecoderProvider,
+      findIngestedDataQuery,
+      findZoneQuery,
+      createIngestedDataCommand,
+      createDataPoints
+    );
 
-  const ingestLatestData = new IngestLatestDataService(
-    inpeProvider,
-    geodecoderProvider,
-    findIngestedDataQuery,
-    findZoneQuery,
-    createIngestedDataCommand,
-    createDataPoints
-  );
+    await ingestLatestData.execute();
 
-  await ingestLatestData.execute();
-
-  res.status(204).end();
-});
+    res.status(204).end();
+  })
+);

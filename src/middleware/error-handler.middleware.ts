@@ -2,7 +2,7 @@ import { NextApiHandler } from 'next';
 
 import { AppError } from '@/util/app-error';
 
-export function errorHandlerHOF(handler: NextApiHandler): NextApiHandler {
+export function withErrorHandling(handler: NextApiHandler): NextApiHandler {
   return async (req, res) => {
     try {
       await handler(req, res);
