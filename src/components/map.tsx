@@ -1,23 +1,40 @@
+import { useState } from 'react';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
+import useSWR from 'swr';
 
 import { mapsConfig } from '@/util/config';
 import mapStyle from '@/util/map-style.json';
 import { FaSpinner } from 'react-icons/fa';
 import { useMapStore } from '@/hooks/use-map-store';
 import { Marker } from '@/components/marker';
+import { IDataPoint } from '@/entities/data-point.entity';
+import { Serialized } from '@/util/serialized';
+
+const fetcher = (input: RequestInfo, init?: RequestInit) =>
+  fetch(input, init).then((res) => res.json());
+
+const initialMapCenter: google.maps.LatLngLiteral = {
+  lat: -3.745,
+  lng: -38.523,
+};
 
 export function Map(): JSX.Element {
+  const currentTimeframe = useMapStore((store) => store.currentTimeframe);
+
+  const { data: markers } = useSWR<Serialized<IDataPoint>[]>(
+    `/api/data-points?timeframe=${currentTimeframe}`,
+    fetcher
+  );
+
   const { isLoaded } = useJsApiLoader({
     id: 'google-maps',
     googleMapsApiKey: mapsConfig.key,
   });
 
-  const markers = useMapStore((state) => state.markers);
-
-  return isLoaded ? (
+  return isLoaded && markers ? (
     <GoogleMap
       mapContainerStyle={{ width: '100vw', height: '100vh' }}
-      center={{ lat: -3.745, lng: -38.523 }}
+      center={initialMapCenter}
       zoom={4}
       options={{
         mapTypeControl: false,
@@ -29,7 +46,7 @@ export function Map(): JSX.Element {
       }}
     >
       {markers.map((m) => (
-        <Marker key={m._id.toHexString()} {...m} />
+        <Marker key={m._id} {...m} />
       ))}
     </GoogleMap>
   ) : (

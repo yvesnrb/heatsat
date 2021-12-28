@@ -3,8 +3,9 @@ import { Marker as GoogleMarker } from '@react-google-maps/api';
 
 import { InfoWindow } from '@/components/info-window';
 import { IDataPoint } from '@/entities/data-point.entity';
+import { Serialized } from '@/util/serialized';
 
-export function Marker(dataPoint: IDataPoint): JSX.Element {
+export function Marker(dataPoint: Serialized<IDataPoint>): JSX.Element {
   const [showInfo, setShowInfo] = useState(false);
 
   const handleMouseOver = useCallback((_e: google.maps.MapMouseEvent) => {
@@ -24,7 +25,7 @@ export function Marker(dataPoint: IDataPoint): JSX.Element {
           lng: dataPoint.lon,
         }}
         satellite={dataPoint.satellite}
-        timestamp={dataPoint.timestamp.toString()}
+        timestamp={dataPoint.timestamp}
       />
 
       <GoogleMarker

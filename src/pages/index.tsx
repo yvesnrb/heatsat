@@ -1,26 +1,13 @@
-import { useEffect } from 'react';
-import type { GetServerSidePropsResult } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 
-import { ListDataPointsQuery } from '@/queries/list-data-points.query';
-import { ListDataPointsService } from '@/services/list-data-points.service';
 import { IDataPoint } from '@/entities/data-point.entity';
-import { useMapStore } from '@/hooks/use-map-store';
 
 export interface IProps {
   initialDataPoints: IDataPoint[];
 }
 
-export default function NextPage(props: IProps): JSX.Element {
-  const { initialDataPoints } = props;
-
-  const setMarkers = useMapStore((state) => state.setMarkers);
-
-  useEffect(() => {
-    setMarkers(initialDataPoints);
-  }, [initialDataPoints, setMarkers]);
-
+export default function NextPage(): JSX.Element {
   return (
     <div className="font-normal text-lg">
       <Head>
@@ -51,18 +38,4 @@ export default function NextPage(props: IProps): JSX.Element {
       </Link>
     </div>
   );
-}
-
-export async function getServerSideProps(): Promise<
-  GetServerSidePropsResult<IProps>
-> {
-  const listDataPointsQuery = new ListDataPointsQuery();
-  const listDataPointsService = new ListDataPointsService(listDataPointsQuery);
-  const initialDataPoints = await listDataPointsService.execute({
-    timeframe: 6,
-  });
-
-  return {
-    props: { initialDataPoints },
-  };
 }
