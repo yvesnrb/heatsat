@@ -1,7 +1,6 @@
 import type { AppProps } from 'next/app';
 
 import '@/styles/globals.css';
-import '@/util/superjson-setup';
 import { Map } from '@/components/map';
 import { MainContainer } from '@/components/main-container';
 import { NavBar } from '@/components/nav-bar';
