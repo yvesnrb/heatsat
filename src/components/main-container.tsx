@@ -1,5 +1,5 @@
 import { useCallback, ReactNode } from 'react';
-import { FaWindowMinimize } from 'react-icons/fa';
+import { FaChevronDown } from 'react-icons/fa';
 import { useTransition, animated } from 'react-spring';
 
 import { useUIStore } from '@/hooks/use-ui-store';
@@ -47,14 +47,14 @@ export function MainContainer(props: IProps): JSX.Element {
               }`}
               style={styles}
             >
-              <div className="flex justify-between items-center bg-foreground mb-5 border-b-2 border-accent-7 pb-4">
+              <div className="flex justify-between items-center bg-foreground mb-1 border-b-2 border-accent-7 pb-4">
                 <img src="/logo.svg" alt="Site Logo" className="h-[30px]" />
 
                 <div
-                  className="flex justify-center items-center p-2 text-accent-2 border-solid border-accent-2 border-2 rounded transition-all hover:text-foreground hover:bg-accent-2 hover:cursor-pointer"
+                  className="flex justify-center items-center p-3 rounded transition-all hover:cursor-pointer hover:bg-accent-6 bg-accent-7 text-background"
                   onClick={handleMinimizeClick}
                 >
-                  <FaWindowMinimize />
+                  <FaChevronDown />
                 </div>
               </div>
 

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import useSWR from 'swr';
 
@@ -9,9 +8,7 @@ import { useMapStore } from '@/hooks/use-map-store';
 import { Marker } from '@/components/marker';
 import { IDataPoint } from '@/entities/data-point.entity';
 import { Serialized } from '@/util/serialized';
-
-const fetcher = (input: RequestInfo, init?: RequestInit) =>
-  fetch(input, init).then((res) => res.json());
+import { fetcher } from '@/util/fetcher';
 
 const initialMapCenter: google.maps.LatLngLiteral = {
   lat: -3.745,
