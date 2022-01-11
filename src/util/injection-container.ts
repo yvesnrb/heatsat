@@ -4,7 +4,9 @@ import { GeodecoderProvider } from '@/providers/geodecoder.provider';
 import { InpeProvider } from '@/providers/inpe.provider';
 import { FindIngestedDataQuery } from '@/queries/find-ingested-data.query';
 import { FindZoneQuery } from '@/queries/find-zone.query';
+import { ListCountriesQuery } from '@/queries/list-countries.query';
 import { ListDataPointsQuery } from '@/queries/list-data-points.query';
+import { ListRegionsQuery } from '@/queries/list-regions.query';
 import { IngestLatestDataService } from '@/services/ingest-latest-data.service';
 import { ListDataPointsService } from '@/services/list-data-points.service';
 
@@ -21,9 +23,14 @@ export const createInjestedDataCommand = new CreateIngestedDataCommand();
 export const findInjestedDataQuery = new FindIngestedDataQuery();
 export const findZoneQuery = new FindZoneQuery();
 export const listDataPointsQuery = new ListDataPointsQuery();
+export const listCountriesQuery = new ListCountriesQuery();
+export const listRegionsQuery = new ListRegionsQuery();
 
 // Providers.
-export const geodecoderProvider = new GeodecoderProvider();
+export const geodecoderProvider = new GeodecoderProvider(
+  listCountriesQuery,
+  listRegionsQuery
+);
 export const inpeProvider = new InpeProvider();
 
 // Services.

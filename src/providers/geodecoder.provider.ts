@@ -1,92 +1,67 @@
-import axios, { AxiosInstance } from 'axios';
-import rateLimit from 'axios-rate-limit';
+import { booleanPointInPolygon, point } from '@turf/turf';
+import { ObjectId } from 'bson';
 
-import { geodecoderConfig } from '@/util/config';
-import { AppError } from '@/util/app-error';
+import { ICountry } from '@/entities/country.entity';
+import { IRegion } from '@/entities/region.entity';
+import { ListCountriesQuery } from '@/queries/list-countries.query';
+import { ListRegionsQuery } from '@/queries/list-regions.query';
 
 export interface IDecodeRequest {
   lat: number;
   lon: number;
 }
 
-export interface IDecodeResponse {
-  country?: string;
-  region?: string;
-}
-
-export interface IMapsResponse {
-  plus_code: {
-    compound_code: string;
-    global_code: string;
-  };
-  results: Array<{
-    types: string[];
-    address_components: Array<{
-      long_name: string;
-      short_name: string;
-      types: string[];
-    }>;
-  }>;
-}
-
 /**
- * Decode coordinates using the Google Maps API
+ * Decode coordinates into a registered region.
  */
 export class GeodecoderProvider {
-  private api: AxiosInstance = rateLimit(
-    axios.create({
-      baseURL: 'https://maps.googleapis.com/maps/api/geocode/json',
-      params: {
-        key: geodecoderConfig.key,
-        language: 'en',
-      },
-    }),
-    { maxRequests: 200, perMilliseconds: 60000 }
-  );
+  private countries: ICountry[] = [];
+
+  private regions: IRegion[] = [];
+
+  constructor(
+    private listCountriesQuery: ListCountriesQuery,
+    private listRegionsQuery: ListRegionsQuery
+  ) {}
 
   /**
-   * Decode a coordinate pair into a country and a region.
+   * Decode a coordinate pair into a registered region.
    *
    * @param request - An object containing the latitude and longitude.
-   * @returns An object with country and region.
-   *
-   * @throws {AppError(500, 'GeodecoderProvider: failed to search for coordinates.')}
-   * Thrown if axios has failed to search for the coordinates on Google's
-   * endpoint.
+   * @returns The ObjectId of the region this coordinate pair is in. Null if
+   * there are no registered regions for this coordinate.
    */
-  public async decode(request: IDecodeRequest): Promise<IDecodeResponse> {
+  public async decode(request: IDecodeRequest): Promise<ObjectId | null> {
     const { lat, lon } = request;
+    let countryId: ObjectId | undefined;
 
-    const { data } = await this.api
-      .get<IMapsResponse>('', {
-        params: {
-          latlng: `${lat},${lon}`,
-        },
-      })
-      .catch((_e) => {
-        throw new AppError(
-          500,
-          'GeodecoderProvider: failed to search for coordinates.'
-        );
-      });
+    if (this.countries.length === 0)
+      this.countries = await this.listCountriesQuery.execute();
 
-    const level1Result = data.results.find((r) =>
-      r.types.includes('administrative_area_level_1')
+    if (this.regions.length === 0)
+      this.regions = await this.listRegionsQuery.execute();
+
+    if (lat > 12 || lon > -20) return null;
+
+    for (let c of this.countries) {
+      if (booleanPointInPolygon(point([lon, lat]), c.geojson)) {
+        countryId = c._id;
+        break;
+      }
+    }
+
+    if (!countryId) return null;
+
+    const countryRegions = this.regions.filter((r) =>
+      r.countryId.equals(countryId as ObjectId)
     );
 
-    if (!level1Result) return {};
+    for (let r of countryRegions) {
+      if (booleanPointInPolygon(point([lon, lat]), r.geojson)) {
+        return r._id;
+      }
+    }
 
-    const country = level1Result.address_components.find((c) =>
-      c.types.includes('country')
-    );
-
-    const region = level1Result.address_components.find((c) =>
-      c.types.includes('administrative_area_level_1')
-    );
-
-    return {
-      country: country?.long_name,
-      region: region?.long_name,
-    };
+    return null;
   }
 }

@@ -11,7 +11,7 @@ export interface IDataPoint extends IHeatReading {
    */
   _id: ObjectID;
   /**
-   * The Object ID of the zone document for this reading on MongoDB.
+   * The Object ID of the region document for this reading on MongoDB.
    */
-  zoneID: ObjectID;
+  regionId: ObjectID;
 }
