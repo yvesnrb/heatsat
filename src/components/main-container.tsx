@@ -18,11 +18,18 @@ export function MainContainer(props: IProps): JSX.Element {
 
   const mainWindowAnimation = useUIStore((state) => state.mainWindowAnimation);
 
+  const setMainWindowAnimation = useUIStore(
+    (state) => state.setMainWindowAnimation
+  );
+
   const openMainNav = useUIStore((state) => state.openMainNav);
 
   const { pathname } = useRouter();
 
-  const handleMinimizeClick = useCallback(() => openMainNav(), [openMainNav]);
+  const handleMinimizeClick = useCallback(() => {
+    setMainWindowAnimation('fromBottom');
+    openMainNav();
+  }, [openMainNav, setMainWindowAnimation]);
 
   const transition = useTransition(isMainWindowOpen, {
     from: {
