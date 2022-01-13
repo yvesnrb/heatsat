@@ -27,15 +27,54 @@ export default function NextPage(): JSX.Element {
       </Head>
 
       <p className="mb-3">
-        Hello! Welcome to HEATSAT. You are viewing real time satellite data from
-        the last 6 hours. More coming soon.
+        Hello! Welcome to HEATSAT. You are viewing real time satellite data
+        from&nbsp;
+        <Link href="/data">
+          <a className="border-dotted border-b-2 text-base border-accent-5">
+            INPE
+          </a>
+        </Link>
+        . Each reading is a heat source detected by an infrared satellite, and
+        may indicate a forest fire.
       </p>
 
-      <Link href="/info">
-        <a className="border-dotted border-b-2 text-base border-accent-5">
-          Click here for more info.
+      <p className="mb-3">
+        This project was built over the course of 3 weeks by&nbsp;
+        <a
+          href="https://github.com/yvesnrb"
+          className="border-dotted border-b-2 text-base border-accent-5"
+          target="_blank"
+          rel="noreferrer"
+        >
+          me
         </a>
-      </Link>
+        , for the &nbsp;
+        <a
+          href="https://dev.to/devteam/announcing-the-mongodb-atlas-hackathon-on-dev-4b6m"
+          className="border-dotted border-b-2 text-base border-accent-5"
+          target="_blank"
+          rel="noreferrer"
+        >
+          MongoDB Atlas Dev Hackaton
+        </a>
+        . It makes extensive use of the time series database feature. The source
+        code is free, under the Apache 2.0 license. You can view the
+        source&nbsp;
+        <a
+          href="https://github.com/yvesnrb/heatsat"
+          className="border-dotted border-b-2 text-base border-accent-5"
+          target="_blank"
+          rel="noreferrer"
+        >
+          here
+        </a>
+        .
+      </p>
+
+      <p>
+        Click the &apos;regions&apos; button above to check how much heat data
+        has been collected on a region over time.
+      </p>
     </div>
   );
 }

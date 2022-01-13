@@ -19,18 +19,23 @@ export default function NextPage(): JSX.Element {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <p className="mb-3">
-        This is the info page. There isn&apos;t much here yet.
+      <p className="mb-5">
+        The main source of data for this project is INPE - the brazilian
+        national institute for space research.&nbsp;
+        <a
+          href="https://queimadas.dgi.inpe.br/queimadas/dados-abertos/#"
+          className="border-dotted border-b-2 text-base border-accent-5"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Learn more
+        </a>
+        .
       </p>
 
-      <a
-        href="https://github.com/yvesnrb/heatsat"
-        className="border-dotted border-b-2 text-base border-accent-5"
-        target="_blank"
-        rel="noreferrer"
-      >
-        Check out this application on GitHub.
-      </a>
+      <div className="bg-background p-3 rounded">
+        <img src="/inpe-logo.png" alt="Site Logo" className="mx-auto" />
+      </div>
     </div>
   );
 }

@@ -84,6 +84,7 @@ export function MainContainer(props: IProps): JSX.Element {
                       Home
                     </a>
                   </Link>
+
                   <Link href="/regions">
                     <a
                       className={`flex flex-1 justify-center p-1 rounded
@@ -95,17 +96,7 @@ export function MainContainer(props: IProps): JSX.Element {
                       Regions
                     </a>
                   </Link>
-                  <Link href="/info">
-                    <a
-                      className={`flex flex-1 justify-center p-1 rounded
-                    transition-all hover:cursor-pointer hover:bg-accent-6
-                    bg-accent-7 text-background ${
-                      pathname === '/info' && 'bg-accent-6'
-                    }`}
-                    >
-                      Info
-                    </a>
-                  </Link>
+
                   <Link href="/data">
                     <a
                       className={`flex flex-1 justify-center p-1 rounded
@@ -114,7 +105,7 @@ export function MainContainer(props: IProps): JSX.Element {
                       pathname === '/data' && 'bg-accent-6'
                     }`}
                     >
-                      Data
+                      Data Source
                     </a>
                   </Link>
                 </div>
