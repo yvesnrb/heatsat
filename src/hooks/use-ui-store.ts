@@ -2,15 +2,40 @@ import create from 'zustand';
 
 export interface IUIStore {
   isMainWindowOpen: boolean;
-  toggleMainWindow: () => void;
+  isMainNavOpen: boolean;
+  isRegionNavOpen: boolean;
+  mainWindowAnimation: 'fromBottom' | 'fromTop';
   openMainWindow: () => void;
-  closeMainWindow: () => void;
+  openMainNav: () => void;
+  openRegionNav: () => void;
+  setMainWindowAnimation: (direction: 'fromBottom' | 'fromTop') => void;
 }
 
 export const useUIStore = create<IUIStore>((set) => ({
-  isMainWindowOpen: true,
-  toggleMainWindow: () =>
-    set((state) => ({ isMainWindowOpen: !state.isMainWindowOpen })),
-  openMainWindow: () => set(() => ({ isMainWindowOpen: true })),
-  closeMainWindow: () => set(() => ({ isMainWindowOpen: false })),
+  isMainWindowOpen: false,
+  isMainNavOpen: true,
+  isRegionNavOpen: false,
+  mainWindowAnimation: 'fromBottom',
+  openMainWindow: () =>
+    set(() => ({
+      isMainWindowOpen: true,
+      isMainNavOpen: false,
+      isRegionNavOpen: false,
+    })),
+  openMainNav: () =>
+    set(() => ({
+      isMainWindowOpen: false,
+      isMainNavOpen: true,
+      isRegionNavOpen: false,
+    })),
+  openRegionNav: () =>
+    set(() => ({
+      isMainWindowOpen: false,
+      isMainNavOpen: false,
+      isRegionNavOpen: true,
+    })),
+  setMainWindowAnimation: (direction: 'fromBottom' | 'fromTop') =>
+    set(() => ({
+      mainWindowAnimation: direction,
+    })),
 }));

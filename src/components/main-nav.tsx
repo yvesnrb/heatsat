@@ -3,19 +3,23 @@ import { FaChevronUp } from 'react-icons/fa';
 import { useTransition, animated } from 'react-spring';
 
 import { useUIStore } from '@/hooks/use-ui-store';
-import { ListBox } from '@/components/listbox';
+import { TimeframeListbox } from '@/components/timeframe-listbox';
 
-export function NavBar(): JSX.Element {
-  const isMainWindowOpen = useUIStore((state) => state.isMainWindowOpen);
+export function MainNav(): JSX.Element {
+  const isMainNavOpen = useUIStore((state) => state.isMainNavOpen);
 
   const openMainWindow = useUIStore((state) => state.openMainWindow);
 
-  const handleMaximizeClick = useCallback(
-    () => openMainWindow(),
-    [openMainWindow]
+  const setMainWindowAnimation = useUIStore(
+    (state) => state.setMainWindowAnimation
   );
 
-  const transition = useTransition(!isMainWindowOpen, {
+  const handleMaximizeClick = useCallback(() => {
+    setMainWindowAnimation('fromBottom');
+    openMainWindow();
+  }, [openMainWindow, setMainWindowAnimation]);
+
+  const transition = useTransition(isMainNavOpen, {
     from: {
       opacity: 0,
       y: -20,
@@ -39,8 +43,8 @@ export function NavBar(): JSX.Element {
         >
           <img src="/logo-compact.svg" alt="Site Logo" className="h-[30px]" />
 
-          <div className="flex">
-            <ListBox />
+          <div className="flex space-x-3">
+            <TimeframeListbox />
 
             <div
               onClick={handleMaximizeClick}

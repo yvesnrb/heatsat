@@ -1,9 +1,11 @@
 import type { AppProps } from 'next/app';
 
 import '@/styles/globals.css';
+import 'simplebar/dist/simplebar.min.css';
 import { Map } from '@/components/map';
 import { MainContainer } from '@/components/main-container';
-import { NavBar } from '@/components/nav-bar';
+import { MainNav } from '@/components/main-nav';
+import { RegionNav } from '@/components/region-nav';
 
 function MyApp(props: AppProps) {
   const { Component, pageProps } = props;
@@ -16,7 +18,9 @@ function MyApp(props: AppProps) {
         <Component {...pageProps} />
       </MainContainer>
 
-      <NavBar />
+      <MainNav />
+
+      <RegionNav />
     </div>
   );
 }

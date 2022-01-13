@@ -1,6 +1,4 @@
-import { useState, useEffect } from 'react';
 import { Listbox } from '@headlessui/react';
-import { FaArrowsAltV } from 'react-icons/fa';
 
 import { useMapStore } from '@/hooks/use-map-store';
 
@@ -15,13 +13,13 @@ const timeframes: IListValue[] = [
   { value: 12, name: 'Last 12 hours' },
 ];
 
-export function ListBox(): JSX.Element {
+export function TimeframeListbox(): JSX.Element {
   const currentTimeFrame = useMapStore((state) => state.currentTimeframe);
 
   const setCurrentTimeFrame = useMapStore((state) => state.setCurrentTimeframe);
 
   return (
-    <div className="relative mr-3">
+    <div className="relative">
       <Listbox value={currentTimeFrame} onChange={setCurrentTimeFrame}>
         <Listbox.Options className="space-y-2 w-52 absolute rounded py-3 px-2 bottom-[55px] left-0 bg-foreground text-background">
           {timeframes.map((t) => (

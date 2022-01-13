@@ -20,3 +20,7 @@
 .gm-style-iw > button {
   display: none !important;
 }
+
+.simplebar-track.simplebar-vertical .simplebar-scrollbar:before {
+    background-color: white;
+}

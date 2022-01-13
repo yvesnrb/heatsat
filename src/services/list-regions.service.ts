@@ -21,7 +21,7 @@ export class ListRegionsService {
         _id: 1,
         countryId: 1,
         name: 1,
-      }
+      },
     });
 
     return list;
