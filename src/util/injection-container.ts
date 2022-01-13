@@ -3,16 +3,20 @@ import { CreateIngestedDataCommand } from '@/commands/create-ingested-data.comma
 import { GeodecoderProvider } from '@/providers/geodecoder.provider';
 import { InpeProvider } from '@/providers/inpe.provider';
 import { FindIngestedDataQuery } from '@/queries/find-ingested-data.query';
+import { FindRegionQuery } from '@/queries/find-region.query';
 import { FindZoneQuery } from '@/queries/find-zone.query';
 import { ListCountriesQuery } from '@/queries/list-countries.query';
 import { ListDataPointsQuery } from '@/queries/list-data-points.query';
 import { ListRegionsQuery } from '@/queries/list-regions.query';
+import { FindRegionService } from '@/services/find-region.service';
 import { IngestLatestDataService } from '@/services/ingest-latest-data.service';
+import { ListCountriesService } from '@/services/list-countries.service';
 import { ListDataPointsService } from '@/services/list-data-points.service';
+import { ListRegionsService } from '@/services/list-regions.service';
 
 // This dependency handling was supposed to be done with tsyringe.
 // Unfortunately, decorator support in SWC is still experimental. This file is
-// a hack with a somewhat simmilar API so that porting in the future is easier
+// a hack with a somewhat similar API so that porting in the future is easier
 // (if I ever remember).
 
 // Commands.
@@ -25,6 +29,7 @@ export const findZoneQuery = new FindZoneQuery();
 export const listDataPointsQuery = new ListDataPointsQuery();
 export const listCountriesQuery = new ListCountriesQuery();
 export const listRegionsQuery = new ListRegionsQuery();
+export const findRegionQuery = new FindRegionQuery();
 
 // Providers.
 export const geodecoderProvider = new GeodecoderProvider(
@@ -45,3 +50,8 @@ export const ingestLatestDataService = new IngestLatestDataService(
 export const listDataPointsService = new ListDataPointsService(
   listDataPointsQuery
 );
+export const listCountriesService = new ListCountriesService(
+  listCountriesQuery
+);
+export const listRegionsService = new ListRegionsService(listRegionsQuery);
+export const findRegionService = new FindRegionService(findRegionQuery);

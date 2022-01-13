@@ -36,10 +36,10 @@ export class GeodecoderProvider {
     let countryId: ObjectId | undefined;
 
     if (this.countries.length === 0)
-      this.countries = await this.listCountriesQuery.execute();
+      this.countries = await this.listCountriesQuery.execute({});
 
     if (this.regions.length === 0)
-      this.regions = await this.listRegionsQuery.execute();
+      this.regions = await this.listRegionsQuery.execute({});
 
     if (lat > 12 || lon > -20) return null;
 
